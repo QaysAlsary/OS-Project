@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+tar cvf newcron.zip nano
+sudo mv newcron.zip /home/ubuntu/os1

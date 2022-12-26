@@ -1,0 +1,59 @@
+#!/bin/bash
+
+echo "please select your options :"
+select num in Backup" "the" "database Restore" "a" "database Enable" "automatic" "backups Quiet
+do
+case $num in 
+Backup" "the" "database)
+echo "Enter the backup name (with extension .zip or .gz or .tar)"
+read name
+tar cvf $name $dbname
+sudo mv $name /home/ubuntu/os1
+
+paths=$(find -name "$name");
+echo "Backup done($paths)"
+;;
+Restore" "a" "database)
+echo "Restore" "a" "database"
+tar xvf $paths $dbname
+echo "Restore done"
+;;
+Enable" "automatic" "backups)
+
+echo "please enter your backup schadlule (daily , weekly , or monthly):"
+read x
+numf=$(ls "/home/ubuntu/os1" | wc -l )
+echo "enter Number of max backup files to keep:"
+read y 
+if [ "$y" -ge $numf ];
+then 
+echo ""
+elif [ "$y" -lt $numf ];
+then
+rm os1/*
+fi
+if [ "$x" = "daily" ];
+then
+ sudo cp /home/ubuntu/backup /etc/cron.daily
+ sudo chmod u+x+r /etc/cron.daily/backup
+ echo "done..."
+ elif [ "$x" = "weekly" ];
+ then 
+ sudo cp /home/ubuntu/backup /etc/cron.weekly
+ sudo chmod u+x+r /etc/cron.weekly/backup
+ echo "done..."
+elif [ "$x" = "monthly" ];
+then 
+ sudo cp /home/ubuntu/backup /etc/cron.monthly
+ sudo chmod u+x+r /etc/cron.monthly/backup
+ echo "done..."
+ else 
+ echo "Wrong entry Please try again"
+fi
+
+;;
+Quiet)
+break; exit $?;;
+*) echo "Invalid option" ;;
+esac
+done 
